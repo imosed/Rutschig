@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Rutschig</title>
+    <link rel="stylesheet" href="~/lib/spectre/dist/spectre.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
+</head>
+<body>
+<header class="navbar">
+  <section class="navbar-section">
+  </section>
+  <section class="navbar-center">
+    <a href="/" class="navbar-brand mr-2"><h3 class="text-bold">Rutschig</h3></a>
+  </section>
+  <section class="navbar-section">
+  </section>
+</header>
+<div class="container grid-lg">
+    @RenderBody()
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2021 - Rutschig - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
