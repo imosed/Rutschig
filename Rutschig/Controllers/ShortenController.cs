@@ -17,9 +17,11 @@ namespace Rutschig.Controllers
         }
         
         [HttpPost]
-        public string Create([FromBody] AliasPost aliasData)
+        public AliasResponse Create([FromBody] AliasPost aliasData)
         {
-            if (_context.Aliases.Any(a => a.Url == aliasData.Url)) return _context.Aliases.Single(a => a.Url == aliasData.Url).Forward;
+            if (_context.Aliases.Any(a => a.Url == aliasData.Url && a.Pin == null))
+                    return new AliasResponse
+                        { Shortened = _context.Aliases.First(a => a.Url == aliasData.Url && a.Pin == null).Forward };
 
             var shortened = new Alias
             {
@@ -30,15 +32,17 @@ namespace Rutschig.Controllers
             };
             _context.Aliases.Add(shortened);
             _context.SaveChanges();
-            return shortened.Forward;
+            return new AliasResponse { Shortened = shortened.Forward};
         }
 
         private static string ShortenUrl(string url)
         {
+            var rand = new Random();
             return BitConverter.ToString(MakeBytesFromString(url))
                 .Replace("-", string.Empty)
                 .ToLowerInvariant()
-                + (char)(DateTime.Now.Millisecond % 26 + 97);
+                + (char)(DateTime.Now.Millisecond % 26 + 97)
+                + (char)(rand.Next() % 26 + 97);
         }
 
         private static byte[] MakeBytesFromString(string url, short length = 4)

@@ -5,6 +5,11 @@ using NodaTime;
 
 namespace Rutschig.Models
 {
+    public class AliasResponse
+    {
+        public string Shortened { get; set; }
+    }
+    
     public class AliasPost
     {
         public string Url { get; set; }
