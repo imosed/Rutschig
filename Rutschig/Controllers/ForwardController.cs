@@ -23,22 +23,22 @@ namespace Rutschig.Controllers
             if (redir == null) return RedirectToAction("Index", "Home");
             if ((redir.Expiration != null && NodaTime.Instant.FromDateTimeOffset(DateTimeOffset.Now) < redir.Expiration || redir.Expiration == null) && redir.Pin == null) return Redirect(redir.Url);
             if (redir.Expiration != null && NodaTime.Instant.FromDateTimeOffset(DateTimeOffset.Now) >= redir.Expiration) return RedirectToAction("Index", "Home");
-            if (redir.Pin != null) return RedirectToAction("PinEntry", new {id = redir.Id});
+            if (redir.Pin != null) return RedirectToAction("PinEntry", new {shortened = redir.Forward});
 
             return RedirectToAction("Index", "Home");
         }
         
         [HttpGet]
-        public IActionResult PinEntry(int id)
+        public IActionResult PinEntry(string shortened)
         {
-            return View(id);
+            return View((object)shortened);
         }
 
         [HttpPost]
         public void CheckPin(ForwardPost forwardData)
         {
             Request.ContentType = "multipart/form-data";
-            var pass = _context.Aliases.Find(forwardData.Id);
+            var pass = _context.Aliases.SingleOrDefault(a => a.Forward == forwardData.Forward);
             if (pass != null)
                 Response.Redirect(pass.Url);
         }
