@@ -29,7 +29,11 @@ namespace Rutschig
 
             services.AddDbContext<RutschigContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"),
-                    pg => pg.SetPostgresVersion(6, 0)));
+                    pg =>
+                    {
+                        pg.SetPostgresVersion(6, 0);
+                        pg.UseNodaTime();
+                    }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,8 +61,12 @@ namespace Rutschig
             {
                 endpoints.MapControllerRoute(
                     name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                
+                endpoints.MapControllerRoute(
+                    name: "redirect",
                     pattern: "{*alias}",
-                    new {controller = "Forward", Action = "Redirect"});
+                    new {controller = "Forward", Action = "Redir"});
             });
         }
     }

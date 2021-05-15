@@ -1,16 +1,14 @@
+@model int
+
 @{
     ViewData["Title"] = "PIN Entry";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
-    
-</div>
-</body>
-</html>
+<form action="/Forward/CheckPin" method="POST">
+    <input type="hidden" value="@Model" name="id" readonly />
+    <div class="form-group">
+        <div class="col-3"><label for="" class="form-label text-large">PIN</label></div>
+        <div class="col-12"><input type="text" maxlength="6" id="expiration" name="pin" class="form-input input-lg"></div>
+    </div>
+    <button type="submit" class="btn btn-lg">Submit</button>
+</form>
