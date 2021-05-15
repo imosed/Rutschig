@@ -19,7 +19,8 @@ namespace Rutschig.Controllers
         [HttpPost]
         public AliasResponse Create([FromBody] AliasPost aliasData)
         {
-            if (_context.Aliases.Any(a => a.Url == aliasData.Url && a.Pin == aliasData.Pin))
+            if (_context.Aliases.Any(a => a.Url == aliasData.Url && a.Pin == aliasData.Pin &&
+                                          (a.Expiration == null || NodaTime.Instant.FromDateTimeOffset(DateTimeOffset.Now) < a.Expiration)))
                     return new AliasResponse
                         { Shortened = _context.Aliases.Single(a => a.Url == aliasData.Url && a.Pin == aliasData.Pin).Forward };
 
