@@ -21,7 +21,7 @@ namespace Rutschig.Controllers
         {
             if (_context.Aliases.Any(a => a.Url == aliasData.Url && a.Pin == null))
                     return new AliasResponse
-                        { Shortened = _context.Aliases.First(a => a.Url == aliasData.Url && a.Pin == null).Forward };
+                        { Shortened = _context.Aliases.Single(a => a.Url == aliasData.Url && a.Pin == null).Forward };
 
             var shortened = new Alias
             {
