@@ -7,7 +7,6 @@ namespace Rutschig.Models
         public RutschigContext(DbContextOptions<RutschigContext> options)
             : base(options)
         {
-            
         }
         
         public DbSet<Alias> Aliases { get; set; }

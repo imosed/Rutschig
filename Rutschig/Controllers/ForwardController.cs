@@ -35,12 +35,13 @@ namespace Rutschig.Controllers
         }
 
         [HttpPost]
-        public void CheckPin(ForwardPost forwardData)
+        public IActionResult CheckPin(ForwardPost forwardData)
         {
             Request.ContentType = "multipart/form-data";
-            var pass = _context.Aliases.SingleOrDefault(a => a.Forward == forwardData.Forward);
+            var pass = _context.Aliases.AsEnumerable().SingleOrDefault(a => a.Forward == forwardData.Forward && a.Pin == forwardData.Pin);
             if (pass != null)
-                Response.Redirect(pass.Url);
+                return Redirect(pass.Url);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
