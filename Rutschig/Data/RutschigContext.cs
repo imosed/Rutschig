@@ -8,7 +8,7 @@ namespace Rutschig.Models
             : base(options)
         {
         }
-        
+
         public DbSet<Alias> Aliases { get; set; }
     }
 }

@@ -1,6 +1,3 @@
-using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using NodaTime;
 
 namespace Rutschig.Models
@@ -9,7 +6,7 @@ namespace Rutschig.Models
     {
         public string Shortened { get; set; }
     }
-    
+
     public class AliasPost
     {
         public string Url { get; set; }

@@ -1,4 +1,6 @@
-﻿async function shorten(url, pin, expiration) {
+﻿const result = document.querySelector('#shortened-result');
+
+async function shorten(url, pin, expiration) {
     let shortened = await fetch('Shorten/Create',
         {
             method: 'POST',
@@ -11,7 +13,16 @@
         }
     );
     let resp = await shortened.json();
-    document.querySelector('#shortened-result').value = `${getDomain(window.location.href)}/${resp.shortened}`;
+    
+    const linkResult = `${getDomain(window.location.href)}/${resp.shortened}`;
+    while (result.hasChildNodes()) {
+        result.removeChild(result.firstChild);
+    }
+    let newLink = document.createElement('a');
+    newLink.setAttribute('href', linkResult);
+    newLink.setAttribute('id', 'shortened-link');
+    newLink.textContent = linkResult;
+    result.appendChild(newLink);
 }
 
 function getDomain(url) {

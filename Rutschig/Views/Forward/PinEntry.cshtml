@@ -7,8 +7,10 @@
 <form action="/Forward/CheckPin" method="POST">
     <input type="hidden" value="@Model" name="forward" readonly/>
     <div class="form-group">
-        <div class="col-3"><label for="pin" class="form-label text-large">PIN</label></div>
-        <div class="col-12"><input type="text" maxlength="6" id="pin" name="pin" class="form-input input-lg"></div>
+        <label for="pin" class="form-label text-large">PIN</label>
+        <div class="text-button-combo">
+            <input type="text" maxlength="6" id="pin" name="pin" class="input form-text" />
+            <button type="submit" class="input form-button">Submit</button>
+        </div>
     </div>
-    <button type="submit" class="btn btn-lg">Submit</button>
 </form>

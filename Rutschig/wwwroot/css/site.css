@@ -1,71 +1,167 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
-
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
+﻿html, body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  font-family: sans-serif;
+  overflow: hidden;
 }
-.footer {
+
+.flow-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flow-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flow-column > *, .flow-row > * {
+  flex: 1;
+}
+
+.text-small {
+  font-size: 10px;
+}
+
+.text-medium {
+  font-size: 13px;
+}
+
+.text-large {
+  font-size: 16px;
+}
+
+.padding-1 {
+  padding: 1px;
+}
+.padding-2 {
+  padding: 2px;
+}
+.padding-3 {
+  padding: 3px;
+}
+.padding-4 {
+  padding: 4px;
+}
+.padding-5 {
+  padding: 5px;
+}
+.padding-6 {
+  padding: 6px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 2px;
+}
+
+.container {
+  height: 100%;
+  width: 86%;
+  max-width: 768px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+nav.navbar {
+  position: absolute;
+  top: 0;
+  background-color: #54494b;
+  width: 100%;
+  padding: 8px;
+}
+
+nav.navbar a.brand {
+  font-family: 'Neutra Text TF Light';
+  font-weight: bold;
+  font-size: 24px;
+  text-decoration: none;
+  color: #f1f7ed;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin: 40px 0;
+}
+
+.form-group:first-of-type {
+  margin-top: 0;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: flex;
+  vertical-align: center;
+  margin-bottom: 4px;
+}
+
+.text-button-combo {
+  display: flex;
+  flex-direction: row;
+}
+
+.text-button-combo .input.form-text {
+  flex: 1;
+  border-radius: 6px 0 0 6px;
+  border-width: 2px 0 2px 2px;
+}
+
+.text-button-combo .input.form-button {
+  border-radius: 0 6px 6px 0;
+}
+
+.input.form-text {
+  display: flex;
+  font-size: 16px;
+  border-style: solid;
+  border-color: #e7e7e7;
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+
+.input.form-button {
+  border-style: none;
+  background-color: #24a045;
+  color: #f1f7ed;
+  padding: 10px 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+footer.footer {
   position: absolute;
   bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+  color: #54494b;
+  font-size: 14px;
+  padding: 6px 12px;
+}
+
+footer.footer a {
+  color: #b33951;
+  text-decoration: none;
+  font-style: italic;
+}
+
+#shortened-result {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+
+a#shortened-link {
+  font-weight: bold;
+  text-transform: lowercase;
+  text-decoration: none;
+  color: #b33951;
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace Rutschig.Models
 {
     public class ErrorViewModel

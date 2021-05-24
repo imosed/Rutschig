@@ -2,29 +2,25 @@
     ViewData["Title"] = "Home";
 }
 
-<div>
+<div class="hidden-overflow">
     <div class="form-group">
-        <div class="col-3"><label for="url" class="form-label text-large">Shorten</label></div>
-        <div class="col-12"><input type="text" id="url" name="url" class="form-input input-lg"></div>
-    </div>
-    <div class="form-group">
-        <div class="col-3"><label for="pin" class="form-label text-large">PIN (optional)</label></div>
-        <div class="col-12"><input type="text" maxlength="6" id="pin" name="pin" class="form-input input-lg"></div>
-    </div>
-    <div class="form-group">
-        <div class="col-3"><label for="expiration" class="form-label text-large">Expiration (optional)</label></div>
-        <div class="col-12"><input type="date" id="expiration" name="expiration" class="form-input input-lg"></div>
-    </div>
-    <div class="columns">
-        <div class="column col-6">
-            <button onclick="shorten(
-                document.querySelector('#url').value,
-                document.querySelector('#pin').value,
-                document.querySelector('#expiration').value
-            )" class="btn btn-lg">Submit</button>
-        </div>
-        <div class="column col-6">
-            <input type="text" class="form-input input-lg" id="shortened-result" readonly>
+        <label for="url">Shorten</label>
+        <div class="text-button-combo">
+            <input type="text" id="url" name="url" class="input form-text" />
+            <button
+                type="submit"
+                class="input form-button"
+                onclick="shorten(document.querySelector('#url').value, document.querySelector('#pin').value, document.querySelector('#expiration').value)"
+            >Shorten</button>
         </div>
     </div>
+    <div class="form-group">
+        <label for="pin">PIN (optional)</label>
+        <input type="text" id="pin" name="pin" class="input form-text" maxlength="6" />
+    </div>
+    <div class="form-group">
+        <label for="expiration">Expiration (optional)</label>
+        <input type="date" id="expiration" name="expiration" class="input form-text" />
+    </div>
+    <div id="shortened-result"></div>
 </div>
