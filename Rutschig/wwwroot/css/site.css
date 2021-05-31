@@ -71,17 +71,17 @@ h1, h2, h3, h4, h5, h6 {
 nav.navbar {
   position: absolute;
   top: 0;
-  background-color: #54494b;
+  background-color: #12263a;
   width: 100%;
   padding: 8px;
 }
 
 nav.navbar a.brand {
-  font-family: 'Neutra Text TF Light';
+  font-family: 'Bitter', serif;
   font-weight: bold;
   font-size: 24px;
   text-decoration: none;
-  color: #f1f7ed;
+  color: #eff9f0;
 }
 
 .form-group {
@@ -121,17 +121,18 @@ nav.navbar a.brand {
 
 .input.form-text {
   display: flex;
+  font-family: 'Molengo', sans-serif;
   font-size: 16px;
   border-style: solid;
-  border-color: #e7e7e7;
+  border-color: #eff9f0;
   padding: 5px 8px;
   border-radius: 6px;
 }
 
 .input.form-button {
   border-style: none;
-  background-color: #24a045;
-  color: #f1f7ed;
+  background-color: #22aaa1;
+  color: #eff9f0;
   padding: 10px 12px;
   font-weight: bold;
   text-transform: uppercase;
@@ -160,7 +161,7 @@ footer.footer a {
 }
 
 a#shortened-link {
-  font-weight: bold;
+  font-family: 'Molengo', sans-serif;
   text-transform: lowercase;
   text-decoration: none;
   color: #b33951;

@@ -30,6 +30,8 @@ namespace Rutschig
                         pg.SetPostgresVersion(6, 0);
                         pg.UseNodaTime();
                     }));
+
+            services.AddSingleton<AppConfig>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

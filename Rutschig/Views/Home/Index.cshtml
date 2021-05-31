@@ -1,26 +1,33 @@
 ﻿@{
     ViewData["Title"] = "Home";
 }
+@inject AppConfig _appConfig
 
 <div class="hidden-overflow">
     <div class="form-group">
         <label for="url">Shorten</label>
         <div class="text-button-combo">
-            <input type="text" id="url" name="url" class="input form-text" />
+            <input type="text" id="url" name="url" class="input form-text"/>
             <button
                 type="submit"
                 class="input form-button"
-                onclick="shorten(document.querySelector('#url').value, document.querySelector('#pin').value, document.querySelector('#expiration').value)"
-            >Shorten</button>
+                onclick="shorten(document.querySelector('#url').value, document.querySelector('#pin').value, document.querySelector('#expiration').value)">
+                Shorten
+            </button>
         </div>
     </div>
     <div class="form-group">
         <label for="pin">PIN (optional)</label>
-        <input type="text" id="pin" name="pin" class="input form-text" maxlength="6" />
+        <input type="text" id="pin" name="pin" class="input form-text" maxlength="@(_appConfig.GetValue<int>("MaxPinLength"))"/>
     </div>
     <div class="form-group">
         <label for="expiration">Expiration (optional)</label>
-        <input type="date" id="expiration" name="expiration" class="input form-text" />
+        <input
+            type="date"
+            id="expiration"
+            name="expiration"
+            class="input form-text"
+        />
     </div>
     <div id="shortened-result"></div>
 </div>
