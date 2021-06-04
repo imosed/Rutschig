@@ -26,9 +26,7 @@ namespace Rutschig.Controllers
                  redir.Expiration == null) && redir.Pin == null) return Redirect(redir.Url);
             if (redir.Expiration != null && Instant.FromDateTimeOffset(DateTimeOffset.Now) >= redir.Expiration)
                 return RedirectToAction("Index", "Home");
-            if (redir.Pin != null) return RedirectToAction("PinEntry", new {shortened = redir.Forward});
-
-            return RedirectToAction("Index", "Home");
+            return redir.Pin != null ? RedirectToAction("PinEntry", new {shortened = redir.Forward}) : RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

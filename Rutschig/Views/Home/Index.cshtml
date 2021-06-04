@@ -3,22 +3,24 @@
 }
 @inject AppConfig _appConfig
 
-<div class="hidden-overflow">
+<div class="subcontainer">
+    <h1 class="page-heading">URL Shortener</h1>
     <div class="form-group">
         <label for="url">Shorten</label>
         <div class="text-button-combo">
-            <input type="text" id="url" name="url" class="input form-text"/>
+            <input type="text" id="url" name="url" class="input form-text" onkeydown="urlFilter(event)"/>
             <button
                 type="submit"
                 class="input form-button"
-                onclick="shorten(document.querySelector('#url').value, document.querySelector('#pin').value, document.querySelector('#expiration').value)">
+                onclick="shorten(document.querySelector('#url').value, document.querySelector('#pin').value, document.querySelector('#expiration').value)"
+            >
                 Shorten
             </button>
         </div>
     </div>
     <div class="form-group">
         <label for="pin">PIN (optional)</label>
-        <input type="text" id="pin" name="pin" class="input form-text" maxlength="@(_appConfig.GetValue<int>("MaxPinLength"))"/>
+        <input type="text" id="pin" name="pin" class="input form-text" maxlength="@(_appConfig.GetValue<int>(nameof(Config.MaxPinLength)))" onkeydown="pinFilter(event)"/>
     </div>
     <div class="form-group">
         <label for="expiration">Expiration (optional)</label>
@@ -26,8 +28,87 @@
             type="date"
             id="expiration"
             name="expiration"
-            class="input form-text"
-        />
+            class="input form-text"/>
     </div>
     <div id="shortened-result"></div>
 </div>
+
+<script type="text/javascript">
+const result = document.querySelector('#shortened-result');
+
+async function shorten(url, pin, expiration) {
+    let shortened = await fetch('Shorten/Create',
+        {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                url: url,
+                pin: pin.trim() !== '' ? pin : null,
+                expiration: expiration.trim() !== '' ? new Date(expiration) : null
+            })
+        }
+    );
+    let resp = await shortened.json();
+    
+    if (resp.shortened === null) return;
+    
+    const linkResult = `${getDomain(window.location.href)}/${resp.shortened}`;
+    while (result.hasChildNodes()) {
+        result.removeChild(result.firstChild);
+    }
+    let newLink = document.createElement('a');
+    newLink.setAttribute('href', linkResult);
+    newLink.setAttribute('id', 'shortened-link');
+    newLink.textContent = linkResult;
+    result.appendChild(newLink);
+}
+
+function getDomain(url) {
+    let chunked = url.split('/');
+    return chunked.slice(0, 3).join('/');
+}
+
+function getDateString(d) {
+    return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`
+}
+
+function addDays(dateTime, days) {
+    return new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate() + days);
+}
+
+const expirationField = document.querySelector('#expiration');
+expirationField
+    .setAttribute(
+        'min',
+        getDateString(
+            addDays(new Date(), 1)
+        )
+    );
+const expDelta = @(_appConfig.GetValue<int>(nameof(Config.MaxExpirationDelta)))
+if (expDelta > 0) {
+    expirationField
+        .setAttribute(
+            'max',
+            getDateString(
+                addDays(new Date(), expDelta)
+            )
+        )
+}
+
+function isSpace(c) {
+    return c === ' ';
+}
+
+function isDigit(c) {
+    const against = /[0-9]/;
+    return against.test(c);
+}
+
+const urlFilter = (e) => {
+    if (isSpace(e.key)) e.preventDefault();
+}
+
+const pinFilter = (e) => {
+    if (!isDigit(e.key)) e.preventDefault();
+}
+</script>

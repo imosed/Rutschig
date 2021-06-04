@@ -16,7 +16,7 @@ namespace Rutschig
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -65,11 +65,23 @@ namespace Rutschig
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
+                
+                endpoints.MapControllerRoute(
+                    "robots",
+                    "robots.txt",
+                    new {controller = "App", Action = "Robots"});
+                
+                endpoints.MapControllerRoute(
+                    "sitemap",
+                    "sitemap.xml",
+                    new {controller = "App", Action = "SiteMap"});
 
                 endpoints.MapControllerRoute(
                     "redirect",
                     "{*alias}",
                     new {controller = "Forward", Action = "Redir"});
+
+                
             });
         }
     }

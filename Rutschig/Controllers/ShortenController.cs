@@ -33,20 +33,22 @@ namespace Rutschig.Controllers
                 var expirationSuccess = DateTime.TryParse(expiration.Trim(), out _);
                 return expirationSuccess;
             }
+
+            var processedUrl = aliasData.Url.ToLowerInvariant().Trim();
             
             var processedPin = ValidPin(aliasData.Pin) ? aliasData.Pin?.Trim() : null;
-            if (processedPin?.Length > _appConfig.GetValue<int>("MaxPinLength"))
-                processedPin = processedPin[.._appConfig.GetValue<int>("MaxPinLength")];
+            if (processedPin?.Length > _appConfig.GetValue<int>(nameof(Config.MaxPinLength)))
+                processedPin = processedPin[.._appConfig.GetValue<int>(nameof(Config.MaxPinLength))];
 
             bool SubmissionQualifies(Alias alias)
             {
-                return alias.Url == aliasData.Url.Trim()
+                return alias.Url == processedUrl
                        && alias.Pin?.Trim() == processedPin
                        && (alias.Expiration == null
                            || Instant.FromDateTimeOffset(DateTimeOffset.Now) < alias.Expiration);
             }
 
-            if (!aliasData.Url.Trim().ToLowerInvariant().StartsWith("http")) return new AliasResponse();
+            if (!processedUrl.StartsWith("http")) return new AliasResponse();
 
             if (_context.Aliases.AsEnumerable().Any(SubmissionQualifies))
                 return new AliasResponse
@@ -56,8 +58,8 @@ namespace Rutschig.Controllers
 
             var shortened = new Alias
             {
-                Forward = ShortenUrl(aliasData.Url.Trim()),
-                Url = aliasData.Url.Trim(),
+                Forward = ShortenUrl(processedUrl),
+                Url = processedUrl,
                 Pin = processedPin,
                 Expiration = ValidExpiration(aliasData.Expiration)
                     ? Instant.FromDateTimeOffset(DateTimeOffset.Parse(aliasData.Expiration!))
@@ -71,7 +73,7 @@ namespace Rutschig.Controllers
         private string ShortenUrl(string url)
         {
             var rand = new Random();
-            var length = _appConfig.GetValue<short>("ShortenedLength");
+            var length = _appConfig.GetValue<short>(nameof(Config.ShortenedLength));
             return BitConverter
                        .ToString(MakeBytesFromString(url, (short) (length / 2 - 1)))
                        .Replace("-", string.Empty)
