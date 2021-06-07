@@ -13,6 +13,7 @@ namespace Rutschig.Models
         public string Url { get; set; }
         public string? Pin { get; set; }
         public string? Expiration { get; set; }
+        public uint? MaxHits { get; set; }
     }
 
     public class Alias
@@ -22,5 +23,7 @@ namespace Rutschig.Models
         public string Url { get; set; }
         public string? Pin { get; set; }
         public Instant? Expiration { get; set; }
+        public uint Hits { get; set; }
+        public uint? MaxHits { get; set; }
     }
 }

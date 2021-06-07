@@ -19,14 +19,36 @@ namespace Rutschig.Controllers
         [HttpGet]
         public IActionResult? Redir(string alias)
         {
+            static bool EndpointAccessible(Alias? alias)
+            {
+                return (alias?.Expiration != null
+                        && Instant.FromDateTimeOffset(DateTimeOffset.Now) < alias.Expiration
+                        || alias?.Expiration == null)
+                       && alias?.Pin == null
+                       && (alias?.Hits < alias?.MaxHits
+                           || alias?.MaxHits == null);
+            }
+
+            static bool EndpointInaccessible(Alias? alias)
+            {
+                return alias?.Expiration != null
+                       && Instant.FromDateTimeOffset(DateTimeOffset.Now) >= alias.Expiration
+                       || alias?.MaxHits != null
+                       && alias.Hits >= alias.MaxHits;
+            }
+            
             var redir = _context.Aliases.SingleOrDefault(a => a.Forward == alias);
 
             if (redir == null) return RedirectToAction("Index", "Home");
-            if ((redir.Expiration != null && Instant.FromDateTimeOffset(DateTimeOffset.Now) < redir.Expiration ||
-                 redir.Expiration == null) && redir.Pin == null) return Redirect(redir.Url);
-            if (redir.Expiration != null && Instant.FromDateTimeOffset(DateTimeOffset.Now) >= redir.Expiration)
+            if (EndpointAccessible(redir))
+            {
+                redir.Hits++;
+                _context.SaveChanges();
+                return Redirect(redir.Url);
+            }
+            if (EndpointInaccessible(redir))
                 return RedirectToAction("Index", "Home");
-            return redir.Pin != null ? RedirectToAction("PinEntry", new {shortened = redir.Forward}) : RedirectToAction("Index", "Home");
+            return redir.Pin != null ? RedirectToAction("PinEntry", new { shortened = redir.Forward }) : RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -40,10 +62,11 @@ namespace Rutschig.Controllers
         {
             Request.ContentType = "multipart/form-data";
             var pass = _context.Aliases.AsEnumerable()
-                .SingleOrDefault(a => a.Forward == forwardData.Forward && a.Pin == forwardData.Pin);
-            if (pass != null)
-                return Redirect(pass.Url);
-            return RedirectToAction("Index", "Home");
+                .SingleOrDefault(a => a.Forward == forwardData.Forward && a.Pin == forwardData.Pin && a.Hits < a.MaxHits);
+            if (pass == null) return RedirectToAction("Index", "Home");
+            pass.Hits++;
+            _context.SaveChanges();
+            return Redirect(pass.Url);
         }
     }
 }

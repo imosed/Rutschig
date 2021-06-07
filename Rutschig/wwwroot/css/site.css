@@ -19,6 +19,18 @@ body {
   flex-direction: row;
 }
 
+.flow-row > * {
+  margin: 0 !important;
+  padding: 0 6px;
+}
+
+.flow-row > *:first-child {
+  padding-left: 0;
+}
+.flow-row > *:last-child {
+  padding-right: 0;
+}
+
 .flow-column > *, .flow-row > * {
   flex: 1;
 }

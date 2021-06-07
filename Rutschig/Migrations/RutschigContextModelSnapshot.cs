@@ -31,12 +31,20 @@ namespace Rutschig.Migrations
                         .HasColumnType("timestamp");
 
                     b.Property<string>("Forward")
+                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<long>("Hits")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("MaxHits")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Pin")
                         .HasColumnType("text");
 
                     b.Property<string>("Url")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

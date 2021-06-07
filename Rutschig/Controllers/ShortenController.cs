@@ -20,7 +20,7 @@ namespace Rutschig.Controllers
         [HttpPost]
         public AliasResponse Create([FromBody] AliasPost aliasData)
         {
-            bool ValidPin(string pin)
+            bool AllNumbers(string pin)
             {
                 if (string.IsNullOrEmpty(pin)) return false;
                 var pinSuccess = int.TryParse(pin.Trim(), out _);
@@ -36,24 +36,25 @@ namespace Rutschig.Controllers
 
             var processedUrl = aliasData.Url.ToLowerInvariant().Trim();
             
-            var processedPin = ValidPin(aliasData.Pin) ? aliasData.Pin?.Trim() : null;
+            var processedPin = AllNumbers(aliasData.Pin) ? aliasData.Pin?.Trim() : null;
             if (processedPin?.Length > _appConfig.GetValue<int>(nameof(Config.MaxPinLength)))
                 processedPin = processedPin[.._appConfig.GetValue<int>(nameof(Config.MaxPinLength))];
 
-            bool SubmissionQualifies(Alias alias)
+            bool SubmissionExists(Alias alias)
             {
                 return alias.Url == processedUrl
                        && alias.Pin?.Trim() == processedPin
                        && (alias.Expiration == null
-                           || Instant.FromDateTimeOffset(DateTimeOffset.Now) < alias.Expiration);
+                           || Instant.FromDateTimeOffset(DateTimeOffset.Now) < alias.Expiration)
+                       && alias.MaxHits == aliasData.MaxHits;
             }
 
             if (!processedUrl.StartsWith("http")) return new AliasResponse();
 
-            if (_context.Aliases.AsEnumerable().Any(SubmissionQualifies))
+            if (_context.Aliases.AsEnumerable().Any(SubmissionExists))
                 return new AliasResponse
                 {
-                    Shortened = _context.Aliases.AsEnumerable().First(SubmissionQualifies).Forward
+                    Shortened = _context.Aliases.AsEnumerable().First(SubmissionExists).Forward
                 };
 
             var shortened = new Alias
@@ -63,26 +64,27 @@ namespace Rutschig.Controllers
                 Pin = processedPin,
                 Expiration = ValidExpiration(aliasData.Expiration)
                     ? Instant.FromDateTimeOffset(DateTimeOffset.Parse(aliasData.Expiration!))
-                    : null
+                    : null,
+                MaxHits = aliasData.MaxHits
             };
             _context.Aliases.Add(shortened);
             _context.SaveChanges();
-            return new AliasResponse {Shortened = shortened.Forward};
+            return new AliasResponse { Shortened = shortened.Forward };
         }
 
         private string ShortenUrl(string url)
         {
             var rand = new Random();
-            var length = _appConfig.GetValue<short>(nameof(Config.ShortenedLength));
+            var length = _appConfig.GetValue<byte>(nameof(Config.ShortenedLength));
             return BitConverter
-                       .ToString(MakeBytesFromString(url, (short) (length / 2 - 1)))
+                       .ToString(MakeBytesFromString(url, (byte) (length / 2 - 1)))
                        .Replace("-", string.Empty)
                        .ToLowerInvariant()
                    + (char) (DateTime.Now.Millisecond % 26 + 97)
                    + (char) (rand.Next() % 26 + 97);
         }
 
-        private static byte[] MakeBytesFromString(string url, short length)
+        private static byte[] MakeBytesFromString(string url, byte length)
         {
             var bytes = new byte[length];
             for (var i = 0; i < url.Length; i++) bytes[i % length] += (byte) url[i];
