@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Rutschig.Models;
 
 namespace Rutschig
@@ -32,10 +34,12 @@ namespace Rutschig
                     }));
 
             services.AddSingleton<AppConfig>();
+
+            services.AddLogging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -52,6 +56,9 @@ namespace Rutschig
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            loggerFactory.AddFile(Path.Combine(Path.GetFullPath("./Logs"), "info.log"));
+            loggerFactory.AddFile(Path.Combine(Path.GetFullPath("./Logs"), "error.log"), LogLevel.Error);
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

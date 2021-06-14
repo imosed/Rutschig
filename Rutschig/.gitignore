@@ -6,8 +6,6 @@
 /contentModel.xml
 /.idea.Rutschig.iml
 /projectSettingsUpdater.xml
-# Datasource local storage ignored files
-/../../../../../../../../:\Users\Jared\RiderProjects\Rutschig2\.idea\.idea.Rutschig\.idea/dataSources/
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
@@ -15,5 +13,6 @@
 **/obj
 **/bin
 **/.idea
+Logs/*
 
 appsettings.Development.json

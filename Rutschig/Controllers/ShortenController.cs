@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 using Rutschig.Models;
 
@@ -10,11 +11,13 @@ namespace Rutschig.Controllers
     {
         private readonly RutschigContext _context;
         private readonly AppConfig _appConfig;
+        private readonly ILogger<ShortenController> _logger;
 
-        public ShortenController(RutschigContext context, AppConfig appConfig)
+        public ShortenController(RutschigContext context, AppConfig appConfig, ILogger<ShortenController> logger)
         {
             _context = context;
             _appConfig = appConfig;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -51,11 +54,18 @@ namespace Rutschig.Controllers
 
             if (!processedUrl.StartsWith("http")) return new AliasResponse();
 
-            if (_context.Aliases.AsEnumerable().Any(SubmissionExists))
-                return new AliasResponse
-                {
-                    Shortened = _context.Aliases.AsEnumerable().First(SubmissionExists).Forward
-                };
+            try
+            {
+                if (_context.Aliases.AsEnumerable().Any(SubmissionExists))
+                    return new AliasResponse
+                    {
+                        Shortened = _context.Aliases.AsEnumerable().First(SubmissionExists).Forward
+                    };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
 
             var shortened = new Alias
             {
@@ -67,8 +77,19 @@ namespace Rutschig.Controllers
                     : null,
                 MaxHits = aliasData.MaxHits
             };
-            _context.Aliases.Add(shortened);
-            _context.SaveChanges();
+            
+            _logger.LogInformation($"{shortened.Url} -> {shortened.Forward}");
+            
+            try
+            {
+                _context.Aliases.Add(shortened);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+
             return new AliasResponse { Shortened = shortened.Forward };
         }
 
