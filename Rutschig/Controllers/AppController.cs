@@ -4,18 +4,11 @@ namespace Rutschig.Controllers
 {
     public class AppController : Controller
     {
-        private readonly AppConfig _appConfig;
-        
-        public AppController(AppConfig appConfig)
-        {
-            _appConfig = appConfig;
-        }
-        
         public IActionResult Robots()
         {
             return Content(
-                "User-agent: *\n" + 
-                "Allow: /$\n" + 
+                "User-agent: *\n" +
+                "Allow: /$\n" +
                 "Disallow: /\n"
             );
         }

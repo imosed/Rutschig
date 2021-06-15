@@ -72,12 +72,12 @@ namespace Rutschig
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
-                
+
                 endpoints.MapControllerRoute(
                     "robots",
                     "robots.txt",
                     new {controller = "App", Action = "Robots"});
-                
+
                 endpoints.MapControllerRoute(
                     "sitemap",
                     "sitemap.xml",
@@ -87,8 +87,6 @@ namespace Rutschig
                     "redirect",
                     "{*alias}",
                     new {controller = "Forward", Action = "Redir"});
-
-                
             });
         }
     }

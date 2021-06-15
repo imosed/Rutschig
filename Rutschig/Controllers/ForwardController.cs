@@ -36,7 +36,7 @@ namespace Rutschig.Controllers
                        || alias?.MaxHits != null
                        && alias.Hits >= alias.MaxHits;
             }
-            
+
             var redir = _context.Aliases.SingleOrDefault(a => a.Forward == alias);
 
             if (redir == null) return RedirectToAction("Index", "Home");
@@ -46,9 +46,12 @@ namespace Rutschig.Controllers
                 _context.SaveChanges();
                 return Redirect(redir.Url);
             }
+
             if (EndpointInaccessible(redir))
                 return RedirectToAction("Index", "Home");
-            return redir.Pin != null ? RedirectToAction("PinEntry", new { shortened = redir.Forward }) : RedirectToAction("Index", "Home");
+            return redir.Pin != null
+                ? RedirectToAction("PinEntry", new {shortened = redir.Forward})
+                : RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -62,7 +65,8 @@ namespace Rutschig.Controllers
         {
             Request.ContentType = "multipart/form-data";
             var pass = _context.Aliases.AsEnumerable()
-                .SingleOrDefault(a => a.Forward == forwardData.Forward && a.Pin == forwardData.Pin && a.Hits < a.MaxHits);
+                .SingleOrDefault(
+                    a => a.Forward == forwardData.Forward && a.Pin == forwardData.Pin && a.Hits < a.MaxHits);
             if (pass == null) return RedirectToAction("Index", "Home");
             pass.Hits++;
             _context.SaveChanges();

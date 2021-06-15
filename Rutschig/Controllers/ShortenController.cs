@@ -9,8 +9,8 @@ namespace Rutschig.Controllers
 {
     public class ShortenController : Controller
     {
-        private readonly RutschigContext _context;
         private readonly AppConfig _appConfig;
+        private readonly RutschigContext _context;
         private readonly ILogger<ShortenController> _logger;
 
         public ShortenController(RutschigContext context, AppConfig appConfig, ILogger<ShortenController> logger)
@@ -38,7 +38,7 @@ namespace Rutschig.Controllers
             }
 
             var processedUrl = aliasData.Url.ToLowerInvariant().Trim();
-            
+
             var processedPin = AllNumbers(aliasData.Pin) ? aliasData.Pin?.Trim() : null;
             if (processedPin?.Length > _appConfig.GetValue<int>(nameof(Config.MaxPinLength)))
                 processedPin = processedPin[.._appConfig.GetValue<int>(nameof(Config.MaxPinLength))];
@@ -77,9 +77,9 @@ namespace Rutschig.Controllers
                     : null,
                 MaxHits = aliasData.MaxHits
             };
-            
+
             _logger.LogInformation($"{shortened.Url} -> {shortened.Forward}");
-            
+
             try
             {
                 _context.Aliases.Add(shortened);
@@ -90,7 +90,7 @@ namespace Rutschig.Controllers
                 _logger.LogError(e.Message);
             }
 
-            return new AliasResponse { Shortened = shortened.Forward };
+            return new AliasResponse {Shortened = shortened.Forward};
         }
 
         private string ShortenUrl(string url)
