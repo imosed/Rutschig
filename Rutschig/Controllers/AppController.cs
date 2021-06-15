@@ -25,7 +25,7 @@ namespace Rutschig.Controllers
             return Content(
                 "<url>\n" +
                 "  <loc>" +
-                _appConfig.GetValue<string>(nameof(Config.AppDomain)) +
+                Request.Host +
                 "/</loc>\n" +
                 "</url>\n"
             );

@@ -1,6 +1,5 @@
 ﻿{
   "appName": "Rutschig",
-  "appDomain": "https://rutschig.us",
   "shortenedLength": 10,
   "maxPinLength": 6,
   "maxExpirationDelta": 0
