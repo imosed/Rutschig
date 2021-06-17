@@ -173,14 +173,11 @@ footer.footer a {
 }
 
 #shortened-result {
-  display: flex;
-  flex-direction: row;
-  justify-content: end;
+  color: #b33951;
 }
 
-a#shortened-link {
-  font-family: 'Molengo', sans-serif;
-  text-transform: lowercase;
-  text-decoration: none;
-  color: #b33951;
+label {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

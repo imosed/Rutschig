@@ -1,11 +1,11 @@
 ﻿@using Rutschig.Controllers
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "URL Shortener";
 }
 @inject AppConfig _appConfig
 
 <div class="subcontainer">
-    <h1 class="page-heading">URL Shortener</h1>
+    <h1 class="page-heading">Shortener</h1>
     <div class="form-group">
         <label for="url">Shorten</label>
         <div class="text-button-combo">
@@ -23,15 +23,11 @@
             </button>
         </div>
     </div>
+    <div class="form-group">
+        <label for="pin">PIN (optional)</label>
+        <input type="text" id="pin" name="pin" class="input form-text" maxlength="@(_appConfig.GetValue<int>(nameof(Config.MaxPinLength)))" onkeydown="allNumbersFilter(event)"/>
+    </div>
     <div class="flow-row">
-        <div class="form-group">
-            <label for="pin">PIN (optional)</label>
-            <input type="text" id="pin" name="pin" class="input form-text" maxlength="@(_appConfig.GetValue<int>(nameof(Config.MaxPinLength)))" onkeydown="allNumbersFilter(event)"/>
-        </div>
-        <div class="form-group">
-            <label for="maxhits">Maximum Hits (optional)</label>
-            <input type="number" id="maxhits" name="maxhits" class="input form-text" min="1" max="@uint.MaxValue" onkeydown="allNumbersFilter(event)"/>
-        </div>
         <div class="form-group">
             <label for="expiration">Expiration (optional)</label>
             <input
@@ -40,9 +36,15 @@
                 name="expiration"
                 class="input form-text"/>
         </div>
+        <div class="form-group">
+            <label for="maxhits">Max Hits (optional)</label>
+            <input type="number" id="maxhits" name="maxhits" class="input form-text" min="1" max="@uint.MaxValue" onkeydown="allNumbersFilter(event)"/>
+        </div>
     </div>
-
-    <div id="shortened-result"></div>
+    <div class="form-group">
+        <label for="shortened-result">Result</label>
+        <input type="text" id="shortened-result" class="input form-text" onclick="this.select()" readonly/>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -65,16 +67,8 @@ async function shorten(url, pin, expiration, maxHits) {
     let resp = await shortened.json();
     
     if (resp.shortened === null) return;
-    
-    const linkResult = `${getDomain(window.location.href)}/${resp.shortened}`;
-    while (result.hasChildNodes()) {
-        result.removeChild(result.firstChild);
-    }
-    let newLink = document.createElement('a');
-    newLink.setAttribute('href', linkResult);
-    newLink.setAttribute('id', 'shortened-link');
-    newLink.textContent = linkResult;
-    result.appendChild(newLink);
+
+    result.value = `${getDomain(window.location.href)}/${resp.shortened}`;
 }
 
 function getDomain(url) {
