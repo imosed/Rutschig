@@ -1,5 +1,5 @@
 # Rutschig
-A URL shortener written in C# using ASP.Net Core. It features PINs and expirations to protect the endpoint.
+A URL shortener written in C# using ASP.Net Core. It features PINs, expirations, and max hits to protect the endpoint. You can see it in action at https://www.rutschig.us.
 
 ## Config
 You can customize your instance of this URL shortener by changing appconfig.json. Values are...
