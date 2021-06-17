@@ -95,14 +95,15 @@ namespace Rutschig.Controllers
 
         private string ShortenUrl(string url)
         {
-            var rand = new Random();
+            static string IntToAlpha(int b) => ((char) (b % 26 + 97)).ToString();
+
+            var now = DateTime.Now;
             var length = _appConfig.GetValue<byte>(nameof(Config.ShortenedLength));
-            return BitConverter
-                       .ToString(MakeBytesFromString(url, (byte) (length / 2 - 1)))
-                       .Replace("-", string.Empty)
-                       .ToLowerInvariant()
-                   + (char) (DateTime.Now.Millisecond % 26 + 97)
-                   + (char) (rand.Next() % 26 + 97);
+            var bytes = MakeBytesFromString(url, (byte) (length - 2));
+            var result = bytes.Select(b => b > 64 ? IntToAlpha(b) : (b % 10).ToString())
+                .Append(IntToAlpha(now.Millisecond))
+                .Append(IntToAlpha(now.Hour));
+            return string.Join(string.Empty, result);
         }
 
         private static byte[] MakeBytesFromString(string url, byte length)
