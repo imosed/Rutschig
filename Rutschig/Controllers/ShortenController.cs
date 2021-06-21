@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -37,7 +38,7 @@ namespace Rutschig.Controllers
                 return expirationSuccess;
             }
 
-            var processedUrl = aliasData.Url.ToLowerInvariant().Trim();
+            var processedUrl = aliasData.Url.Trim();
 
             var processedPin = AllNumbers(aliasData.Pin) ? aliasData.Pin?.Trim() : null;
             if (processedPin?.Length > _appConfig.GetValue<int>(nameof(Config.MaxPinLength)))
@@ -106,7 +107,7 @@ namespace Rutschig.Controllers
             return string.Join(string.Empty, result);
         }
 
-        private static byte[] MakeBytesFromString(string url, byte length)
+        private static IEnumerable<byte> MakeBytesFromString(string url, byte length)
         {
             var bytes = new byte[length];
             for (var i = 0; i < url.Length; i++) bytes[i % length] += (byte) url[i];
