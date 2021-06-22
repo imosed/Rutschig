@@ -96,12 +96,12 @@ namespace Rutschig.Controllers
 
         private string ShortenUrl(string url)
         {
-            static string IntToAlpha(int b) => ((char) (b % 26 + 97)).ToString();
+            static string IntToAlpha(int b) => ((char) (32 * (Math.Floor(b / 32.0) % 2 + 2) + (b % 26 + 1))).ToString();
 
             var now = DateTime.Now;
             var length = _appConfig.GetValue<byte>(nameof(Config.ShortenedLength));
             var bytes = MakeBytesFromString(url, (byte) (length - 2));
-            var result = bytes.Select(b => b > 64 ? IntToAlpha(b) : (b % 10).ToString())
+            var result = bytes.Select(b => b > 128 ? IntToAlpha(b) : (b % 10).ToString())
                 .Append(IntToAlpha(now.Millisecond))
                 .Append(IntToAlpha(now.Hour));
             return string.Join(string.Empty, result);
