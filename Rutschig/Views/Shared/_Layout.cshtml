@@ -9,13 +9,14 @@
     <meta name="robots" content="index, nofollow"/>
     <title>@(_appConfig.GetValue<string>(nameof(Config.AppName))) - @ViewData["Title"]</title>
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/bitter" media="screen">
-    <link rel="stylesheet" href="http://fonts.cdnfonts.com/css/qlassik" >
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/qlassik" media="screen">
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/source-sans-pro" media="screen">
     <link rel="stylesheet" href="~/css/site.css"/>
 </head>
 <body>
 <nav class="navbar">
     <a href="/" class="brand">@(_appConfig.GetValue<string>(nameof(Config.AppName)))</a>
+
 </nav>
 <div class="container">
     @RenderBody()

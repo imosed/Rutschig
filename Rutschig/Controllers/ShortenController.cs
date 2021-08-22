@@ -43,6 +43,7 @@ namespace Rutschig.Controllers
             var processedPin = AllNumbers(aliasData.Pin) ? aliasData.Pin?.Trim() : null;
             if (processedPin?.Length > _appConfig.GetValue<int>(nameof(Config.MaxPinLength)))
                 processedPin = processedPin[.._appConfig.GetValue<int>(nameof(Config.MaxPinLength))];
+            string SummedPin() => processedPin?.Select(c => (int) c).Sum().ToString() ?? string.Empty;
 
             bool SubmissionExists(Alias alias)
             {
@@ -70,7 +71,7 @@ namespace Rutschig.Controllers
 
             var shortened = new Alias
             {
-                Forward = ShortenUrl(processedUrl),
+                Forward = ShortenUrl(processedUrl + SummedPin()),
                 Url = processedUrl,
                 Pin = processedPin,
                 Expiration = ValidExpiration(aliasData.Expiration)
@@ -96,14 +97,15 @@ namespace Rutschig.Controllers
 
         private string ShortenUrl(string url)
         {
-            static string IntToAlpha(int b) => ((char) (32 * (Math.Floor(b / 32.0) % 2 + 2) + (b % 26 + 1))).ToString();
-
             var now = DateTime.Now;
             var length = _appConfig.GetValue<byte>(nameof(Config.ShortenedLength));
-            var bytes = MakeBytesFromString(url, (byte) (length - 2));
-            var result = bytes.Select(b => b > 128 ? IntToAlpha(b) : (b % 10).ToString())
-                .Append(IntToAlpha(now.Millisecond))
-                .Append(IntToAlpha(now.Hour));
+            var bytes = MakeBytesFromString(url, (byte) (length - 2)).Append((byte)now.Millisecond).Append((byte)(now.Hour*11+2));
+            var result = bytes.Select(b =>
+            {
+                var t = Math.Floor(b / 2.0f);
+                var c = (char) t;
+                return !char.IsLetter(c) ? (t % 10).ToString() : c.ToString();
+            });
             return string.Join(string.Empty, result);
         }
 
