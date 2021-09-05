@@ -47,7 +47,7 @@ body {
   font-size: 16px;
 }
 
-h1.page-heading {
+h2.page-heading {
   font-family: 'Source Sans Pro', sans-serif;
   color: #766153;
   border-bottom: 1px dotted #727272;
@@ -139,7 +139,7 @@ nav.navbar a.brand {
 
 .input.form-text {
   display: flex;
-  font-family: 'Qlassic Medium', sans-serif;
+  font-family: 'Raleway', sans-serif;
   font-size: 16px;
   border-style: solid;
   border-color: #eff9f0;

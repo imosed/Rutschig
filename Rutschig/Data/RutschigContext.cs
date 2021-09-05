@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Rutschig.Models;
 
-namespace Rutschig.Models
+namespace Rutschig.Data
 {
     public class RutschigContext : DbContext
     {

@@ -4,6 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NodaTime;
+using Rutschig.Config;
+using Rutschig.Data;
 using Rutschig.Models;
 
 namespace Rutschig.Controllers
@@ -41,9 +43,13 @@ namespace Rutschig.Controllers
             var processedUrl = aliasData.Url.Trim();
 
             var processedPin = AllNumbers(aliasData.Pin) ? aliasData.Pin?.Trim() : null;
-            if (processedPin?.Length > _appConfig.GetValue<int>(nameof(Config.MaxPinLength)))
-                processedPin = processedPin[.._appConfig.GetValue<int>(nameof(Config.MaxPinLength))];
-            string SummedPin() => processedPin?.Select(c => (int) c).Sum().ToString() ?? string.Empty;
+            if (processedPin?.Length > _appConfig.GetValue<int>(nameof(Config.Config.MaxPinLength)))
+                processedPin = processedPin[.._appConfig.GetValue<int>(nameof(Config.Config.MaxPinLength))];
+
+            string SummedPin()
+            {
+                return processedPin?.Select(c => (int) c).Sum().ToString() ?? string.Empty;
+            }
 
             bool SubmissionExists(Alias alias)
             {
@@ -98,8 +104,10 @@ namespace Rutschig.Controllers
         private string ShortenUrl(string url)
         {
             var now = DateTime.Now;
-            var length = _appConfig.GetValue<byte>(nameof(Config.ShortenedLength));
-            var bytes = MakeBytesFromString(url, (byte) (length - 2)).Append((byte)now.Millisecond).Append((byte)(now.Hour*11+2));
+            var length = _appConfig.GetValue<byte>(nameof(Config.Config.ShortenedLength));
+            var bytes = MakeBytesFromString(url, (byte) (length - 2))
+                .Append((byte) now.Millisecond)
+                .Append((byte) (now.Hour * 11 + 2));
             var result = bytes.Select(b =>
             {
                 var t = Math.Floor(b / 2.0f);

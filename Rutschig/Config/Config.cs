@@ -1,4 +1,4 @@
-﻿namespace Rutschig
+﻿namespace Rutschig.Config
 {
     public class Config
     {

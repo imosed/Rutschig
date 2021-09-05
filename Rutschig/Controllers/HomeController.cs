@@ -22,6 +22,8 @@ namespace Rutschig.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            _logger.LogError("Error: {StatusCode}, {TraceIdentifier}", HttpContext.Response.StatusCode,
+                HttpContext.TraceIdentifier);
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }

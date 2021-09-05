@@ -1,11 +1,12 @@
-﻿@using Rutschig.Controllers
+﻿@using Rutschig.Config
+@using Rutschig.Controllers
 @{
     ViewData["Title"] = "URL Shortener";
 }
 @inject AppConfig _appConfig
 
 <div class="subcontainer">
-    <h1 class="page-heading">Shortener</h1>
+    <h2 class="page-heading">Shortener</h2>
     <div class="form-group">
         <label for="url">Shorten</label>
         <div class="text-button-combo">

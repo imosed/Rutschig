@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NodaTime;
+using Rutschig.Data;
 using Rutschig.Models;
 
 namespace Rutschig.Migrations

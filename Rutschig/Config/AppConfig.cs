@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace Rutschig
+namespace Rutschig.Config
 {
     public class AppConfig
     {

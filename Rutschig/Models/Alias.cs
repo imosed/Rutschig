@@ -5,7 +5,7 @@ namespace Rutschig.Models
 {
     public class AliasResponse
     {
-        public string Shortened { get; set; }
+        public string Shortened { get; init; }
     }
 
     public class AliasPost
@@ -19,11 +19,11 @@ namespace Rutschig.Models
     public class Alias
     {
         public int Id { get; set; }
-        public string Forward { get; set; }
-        public string Url { get; set; }
-        public string? Pin { get; set; }
-        public Instant? Expiration { get; set; }
+        public string Forward { get; init; }
+        public string Url { get; init; }
+        public string? Pin { get; init; }
+        public Instant? Expiration { get; init; }
         public uint Hits { get; set; }
-        public uint? MaxHits { get; set; }
+        public uint? MaxHits { get; init; }
     }
 }
