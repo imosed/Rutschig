@@ -1,4 +1,6 @@
 #nullable enable
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using NodaTime;
 
 namespace Rutschig.Models
@@ -18,6 +20,8 @@ namespace Rutschig.Models
 
     public class Alias
     {
+        [Key]
+        [Column("Id")]
         public int Id { get; set; }
         public string Forward { get; init; }
         public string Url { get; init; }

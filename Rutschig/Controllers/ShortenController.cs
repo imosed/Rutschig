@@ -64,10 +64,10 @@ namespace Rutschig.Controllers
 
             try
             {
-                if (_context.Aliases.AsEnumerable().Any(SubmissionExists))
+                if (_context.AliasList.AsEnumerable().Any(SubmissionExists))
                     return new AliasResponse
                     {
-                        Shortened = _context.Aliases.AsEnumerable().First(SubmissionExists).Forward
+                        Shortened = _context.AliasList.AsEnumerable().First(SubmissionExists).Forward
                     };
             }
             catch (Exception e)
@@ -86,11 +86,9 @@ namespace Rutschig.Controllers
                 MaxHits = aliasData.MaxHits
             };
 
-            _logger.LogInformation($"{shortened.Url} -> {shortened.Forward}");
-
             try
             {
-                _context.Aliases.Add(shortened);
+                _context.AliasList.Add(shortened);
                 _context.SaveChanges();
             }
             catch (Exception e)

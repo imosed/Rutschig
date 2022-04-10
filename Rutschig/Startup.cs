@@ -60,6 +60,7 @@ namespace Rutschig
 
             loggerFactory.AddFile(Path.Combine(Path.GetFullPath("./Logs"), "info.log"));
             loggerFactory.AddFile(Path.Combine(Path.GetFullPath("./Logs"), "error.log"), LogLevel.Error);
+            loggerFactory.AddFile(Path.Combine(Path.GetFullPath("./Logs"), "debug.log"), LogLevel.Debug);
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

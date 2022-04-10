@@ -10,6 +10,11 @@ namespace Rutschig.Data
         {
         }
 
-        public DbSet<Alias> Aliases { get; set; }
+        public DbSet<Alias> AliasList { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Alias>().HasKey(f => f.Id).HasName("PK_AliasId");
+        }
     }
 }

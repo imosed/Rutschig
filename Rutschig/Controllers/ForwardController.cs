@@ -38,7 +38,7 @@ namespace Rutschig.Controllers
                        && alias.Hits >= alias.MaxHits;
             }
 
-            var redir = _context.Aliases.SingleOrDefault(a => a.Forward == alias);
+            var redir = _context.AliasList.SingleOrDefault(a => a.Forward == alias);
 
             if (redir == null) return RedirectToAction("Index", "Home");
             if (EndpointAccessible(redir))
@@ -65,9 +65,10 @@ namespace Rutschig.Controllers
         public IActionResult CheckPin(ForwardPost forwardData)
         {
             Request.ContentType = "multipart/form-data";
-            var pass = _context.Aliases.AsEnumerable()
+            var pass = _context.AliasList.AsEnumerable()
                 .SingleOrDefault(
-                    a => a.Forward == forwardData.Forward && a.Pin == forwardData.Pin && a.Hits < a.MaxHits);
+                    a => a.Forward == forwardData.Forward && a.Pin == forwardData.Pin &&
+                         (a.Hits < a.MaxHits || a.MaxHits == null));
             if (pass == null) return RedirectToAction("Index", "Home");
             pass.Hits++;
             _context.SaveChanges();
