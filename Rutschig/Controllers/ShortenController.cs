@@ -57,7 +57,8 @@ namespace Rutschig.Controllers
                        && alias.Pin?.Trim() == processedPin
                        && (alias.Expiration == null
                            || Instant.FromDateTimeOffset(DateTimeOffset.Now) < alias.Expiration)
-                       && alias.MaxHits == aliasData.MaxHits;
+                       && (alias.MaxHits == null
+                           || alias.Hits < aliasData.MaxHits);
             }
 
             if (!processedUrl.StartsWith("http")) return new AliasResponse();
@@ -103,24 +104,31 @@ namespace Rutschig.Controllers
         {
             var now = DateTime.Now;
             var length = _appConfig.GetValue<byte>(nameof(Config.Config.ShortenedLength));
-            var bytes = MakeBytesFromString(url, (byte) (length - 2))
-                .Append((byte) now.Millisecond)
-                .Append((byte) (now.Hour * 11 + 2));
-            var result = bytes.Select(b =>
-            {
-                var t = Math.Floor(b / 2.0f);
-                var c = (char) t;
-                return !char.IsLetter(c) ? (t % 10).ToString() : c.ToString();
-            });
-            return string.Join(string.Empty, result);
+
+            var shortened =
+                CreateStringSignature(url, (byte)(length - 2)).Select(GetCharConstrained)
+                    .Append(GetCharConstrained(now.Millisecond)).Append(GetCharConstrained(now.Hour));
+            return string.Join(string.Empty, shortened);
         }
 
-        private static IEnumerable<byte> MakeBytesFromString(string url, byte length)
+        private static IEnumerable<int> CreateStringSignature(string url, byte length)
         {
-            var bytes = new byte[length];
-            for (var i = 0; i < url.Length; i++) bytes[i % length] += (byte) url[i];
+            var signature = new int[length];
+            for (var i = 0; i < url.Length; i++) signature[i % length] += url[i];
 
-            return bytes;
+            return signature;
+        }
+
+        private static char GetCharConstrained(int input)
+        {
+            var pool = new[] {
+                Enumerable.Range(49, 8).ToArray(), // 1-9 (intentionally exclude 0, as it could be mistaken for 'o')
+                Enumerable.Range(65, 26).ToArray(), // A-Z
+                Enumerable.Range(97, 26).ToArray() // a-z
+            };
+
+            var range = pool[input % 3];
+            return (char)range[input % range.Length];
         }
     }
 }

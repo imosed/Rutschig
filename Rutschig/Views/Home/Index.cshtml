@@ -13,7 +13,7 @@
             <input type="text" id="url" name="url" class="input form-text" onkeydown="urlFilter(event)"/>
             <button
                 type="submit"
-                class="input form-button"
+                class="input form-button confirm"
                 onclick="shorten(
                     document.querySelector('#url').value,
                     document.querySelector('#pin').value,
@@ -44,8 +44,17 @@
     </div>
     <div class="form-group">
         <label for="shortened-result">Result</label>
-        <input type="text" id="shortened-result" class="input form-text" onclick="this.select()" readonly/>
+        <div class="text-button-combo">
+            <input type="text" id="shortened-result" class="input form-text" onclick="this.select()" readonly/>
+            <button
+                class="input form-button primary"
+                onclick="copyShortenedToClipboard()"
+            >
+                Copy
+            </button>
+        </div>
     </div>
+    <div id="toast"></div>
 </div>
 
 <script type="text/javascript">
@@ -70,6 +79,25 @@ async function shorten(url, pin, expiration, maxHits) {
     if (resp.shortened === null) return;
 
     result.value = `${getDomain(window.location.href)}/${resp.shortened}`;
+
+}
+
+async function copyShortenedToClipboard() {
+    const shortened = document.querySelector('#shortened-result').value;
+    if (shortened.length > 0) {
+        await navigator.clipboard.writeText(shortened);
+        displayToast('Shortened result copied to clipboard', 2000);
+    }
+}
+
+function displayToast(message, duration) {
+    const toast = document.querySelector('#toast');
+    toast.innerText = message;
+    toast.style.display = 'inline-block';
+    toast.style.left = `${(window.innerWidth - toast.clientWidth) / 2}px`;
+    toast.setAttribute('class', 'in');
+    window.setTimeout(() => (toast.setAttribute('class', 'out')), duration);
+    window.setTimeout(() => (toast.style.display = 'none'), duration + 400);
 }
 
 function getDomain(url) {

@@ -90,7 +90,7 @@ nav.navbar {
   position: absolute;
   top: 0;
   background-color: #12263a;
-  width: 100%;
+  width: calc(100% - 16px);
   padding: 8px;
 }
 
@@ -119,6 +119,7 @@ nav.navbar a.brand {
 .form-group label {
   display: flex;
   vertical-align: center;
+  margin-left: 4px;
   margin-bottom: 4px;
 }
 
@@ -142,14 +143,21 @@ nav.navbar a.brand {
   font-family: 'Raleway', sans-serif;
   font-size: 16px;
   border-style: solid;
-  border-color: #eff9f0;
+  border-color: #e0eae1;
   padding: 5px 8px;
   border-radius: 6px;
 }
 
+.input.form-button.confirm {
+  background-color: #22AAA1;
+}
+
+.input.form-button.primary {
+  background-color: #12263A;
+}
+
 .input.form-button {
   border-style: none;
-  background-color: #22aaa1;
   color: #eff9f0;
   padding: 10px 12px;
   font-weight: bold;
@@ -180,4 +188,44 @@ label {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+#toast {
+  display: none;
+  position: absolute;
+  bottom: 50vh;
+  background-color: #12263ACC;
+  font-size: min(3.75vw, 16px);
+  border-radius: 4em;
+  color: #fff;
+  padding: 4px 14px;
+  animation-duration: 400ms;
+}
+
+#toast.in {
+  animation-name: fadein;
+}
+
+#toast.out {
+  animation-name: fadeout;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }

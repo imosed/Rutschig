@@ -31,6 +31,8 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\LICENSE.md" />
+      <_ContentIncludedByDefault Remove="wwwroot\ts\site.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\ts\tsconfig.json" />
     </ItemGroup>
 
     <ItemGroup>
